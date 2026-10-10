@@ -1,20 +1,15 @@
-{{portada}}
+> **Análisis de Software de la Plataforma EduAirControl**  
+> María de los Ángeles Olaya García; Jhon Jairo Cortez Vargas  
+> Tecnólogo en Análisis y Desarrollo de Software – 3145556, Servicio Nacional de Aprendizaje (SENA)  
+> Análisis y Desarrollo de Software – 3145556  
+> Todos los instructores del programa  
+> 9 de octubre de 2026 · 2025-2026
 
 # Resumen
 
 Este documento presenta el análisis de software de EduAirControl, una plataforma web de monitoreo y análisis ambiental para ambientes educativos. El análisis define el contexto del problema, el alcance del producto mínimo viable, los actores, los requisitos funcionales y no funcionales, y el modelamiento UML del sistema: casos de uso, diagramas de secuencia para los flujos críticos (autenticación, consulta del dashboard e ingesta de mediciones) y diagrama de clases del modelo de dominio. Adicionalmente, se describe la lógica de los algoritmos centrales mediante pseudocódigo, se evalúa la factibilidad técnica, económica y operativa, y se identifican los riesgos principales del proyecto. La información proviene de la documentación del proyecto, con la Especificación de Requisitos (Entregable 02) como fuente de la nomenclatura `RF`, `RNF` y `CU`, y se organiza de acuerdo con la fase de análisis del ciclo de vida del software. El documento funciona como referencia para las fases de planificación, diseño e implementación, y como evidencia del resultado de aprendizaje relacionado con la especificación y evaluación de requisitos de soluciones de software.
 
 *Palabras clave:* análisis de software, requisitos funcionales, casos de uso, UML, monitoreo ambiental, microservicios.
-
-{{salto}}
-
-<p class="h1-look"><strong>Índice</strong></p>
-
-[TOC]
-
-{{salto}}
-
-<p class="paper-title">Análisis de Software de la Plataforma EduAirControl</p>
 
 # 1. Introducción
 
@@ -24,7 +19,7 @@ El análisis se elaboró sobre la documentación del proyecto, que funciona como
 
 El documento está dirigido al equipo de desarrollo, al instructor evaluador y a los actores que participen en las fases de planificación y diseño. Se organiza como sigue: Sección 2 (descripción general), Sección 3 (alcance y objetivos), Sección 4 (actores), Sección 5 (requisitos), Sección 6 (casos de uso), Sección 7 (diagramas de secuencia), Sección 8 (diagrama de clases), Sección 9 (algoritmos y procesos lógicos), Sección 10 (factibilidad), Sección 11 (riesgos), Sección 12 (conclusiones), referencias y anexos.
 
-{{tabla: Entregables del proyecto relacionados con este documento}}
+**Tabla 1.** *Entregables del proyecto relacionados con este documento*
 
 | Entregable | Contenido | Uso en este documento |
 |------------|-----------|------------------------|
@@ -41,7 +36,7 @@ El documento está dirigido al equipo de desarrollo, al instructor evaluador y a
 
 Las instituciones educativas necesitan comprender las condiciones ambientales de aulas y otros espacios educativos (temperatura, humedad, CO₂ y nivel de ruido). Antes del sistema, la información de los sensores se consulta de forma fragmentada y dispersa, lo que impide centralizar las mediciones, compararlas en el tiempo y utilizarlas para tomar decisiones sobre los espacios monitoreados.
 
-{{tabla: Dimensiones del problema y su implicación en el producto}}
+**Tabla 2.** *Dimensiones del problema y su implicación en el producto*
 
 | Dimensión | Problema actual | Implicación en el producto |
 |-----------|-----------------|----------------------------|
@@ -61,7 +56,7 @@ La promesa del producto se resume en cuatro compromisos: (a) centralización de 
 
 ## 2.3 Componentes y servicios del sistema
 
-{{tabla: Componentes desplegables del sistema}}
+**Tabla 3.** *Componentes desplegables del sistema*
 
 | Componente | Responsabilidad | Puerto |
 |------------|-----------------|--------|
@@ -87,7 +82,7 @@ El proyecto se encuentra en fase de desarrollo del MVP, sin versión publicada. 
 
 ## 3.1 Alcance del producto mínimo viable
 
-{{tabla: Capacidades incluidas en el MVP}}
+**Tabla 4.** *Capacidades incluidas en el MVP*
 
 | # | Capacidad | Descripción | Servicio responsable |
 |---|-----------|-------------|----------------------|
@@ -103,7 +98,7 @@ El proyecto se encuentra en fase de desarrollo del MVP, sin versión publicada. 
 
 ## 3.2 Fuera del alcance
 
-{{tabla: Capacidades excluidas del MVP}}
+**Tabla 5.** *Capacidades excluidas del MVP*
 
 | # | Capacidad excluida | Motivo |
 |---|--------------------|--------|
@@ -129,7 +124,7 @@ Adicionalmente, el desarrollo del hardware de los sensores y la infraestructura 
 
 ## 3.4 Supuestos y restricciones
 
-{{tabla: Supuestos, restricciones y dependencias del alcance}}
+**Tabla 6.** *Supuestos, restricciones y dependencias del alcance*
 
 | Tipo | Condición | Consecuencia si no se cumple |
 |------|-----------|------------------------------|
@@ -145,7 +140,7 @@ Adicionalmente, el desarrollo del hardware de los sensores y la infraestructura 
 
 # 4. Actores del sistema
 
-{{tabla: Actores del sistema EduAirControl}}
+**Tabla 7.** *Actores del sistema EduAirControl*
 
 | Actor | Tipo | Descripción | Interacción principal |
 |-------|------|-------------|------------------------|
@@ -161,7 +156,7 @@ Adicionalmente, el desarrollo del hardware de los sensores y la infraestructura 
 
 Los requisitos funcionales describen qué debe hacer el sistema. Los identificadores `RFx.y` son los de la **Especificación de Requisitos de Software (Entregable 02)**, de modo que ambos documentos comparten una única nomenclatura. Aquí se reúnen con el servicio responsable, la historia de usuario (HU) y la prioridad; la trazabilidad completa se encuentra en el Anexo A.
 
-{{tabla: Requisitos funcionales del MVP (RF1.1–RF9.5)}}
+**Tabla 8.** *Requisitos funcionales del MVP (RF1.1–RF9.5)*
 
 | ID | Requisito | Servicio responsable | HU | Prioridad |
 |----|-----------|----------------------|----|-----------|
@@ -213,7 +208,7 @@ Nota de trazabilidad: los identificadores `FR-001` a `FR-017` usados en versione
 
 Los requisitos no funcionales definen las cualidades medibles del sistema; toda meta debe ser verificable. Los identificadores `RNF1`–`RNF10` son los de la Especificación de Requisitos de Software (Entregable 02); se conserva aquí la columna de verificación, que fija cómo se demuestra cada meta.
 
-{{tabla: Requisitos no funcionales y sus metas de aceptación}}
+**Tabla 9.** *Requisitos no funcionales y sus metas de aceptación*
 
 | ID | Categoría | Meta de aceptación | Verificación |
 |----|-----------|--------------------|--------------|
@@ -232,7 +227,7 @@ Los requisitos no funcionales definen las cualidades medibles del sistema; toda 
 
 Las reglas de negocio se validan en cada operación y no pueden violarse bajo ninguna circunstancia. Los identificadores `INV-xxx` provienen del modelo de dominio; la última columna vincula cada invariante con la regla equivalente de la Sección 10 del Entregable 02 (Especificación de Requisitos), que no define identificadores propios.
 
-{{tabla: Invariantes del dominio (reglas de negocio)}}
+**Tabla 10.** *Invariantes del dominio (reglas de negocio)*
 
 | ID | Regla | Viola si... | Regla asociada (Doc. 02 §10) | Implementación |
 |----|-------|-------------|------------------------------|----------------|
@@ -255,11 +250,15 @@ Las restantes reglas del Doc. 02 §10 —identidad y autorización en toda opera
 
 El Diagrama 1 (Figura 1) muestra los actores principales del sistema y los casos de uso `CU-xx` definidos en la Sección 9 del Entregable 02 (Especificación de Requisitos). Los casos de uso de consulta incluyen (`<<include>>`) el control de acceso interno —validación de credenciales y emisión de JWT, y autorización por roles (`RBAC`)—, mientras que las operaciones de gestión extienden (`<<extend>>`) dicho control según el rol.
 
-{{figura: diagramas/exports/es/01-casos-uso.svg|Diagrama de casos de uso del sistema EduAirControl|Elaboración propia a partir del catálogo CU-01–CU-17 del Entregable 02 y de los requisitos RF de la Sección 5.}}
+**Figura 1.** *Diagrama de casos de uso del sistema EduAirControl*
+
+![Diagrama de casos de uso del sistema EduAirControl](diagramas/exports/es/01-casos-uso.svg)
+
+*Nota.* Elaboración propia a partir del catálogo CU-01–CU-17 del Entregable 02 y de los requisitos RF de la Sección 5.
 
 ## 6.2 Catálogo de casos de uso
 
-{{tabla: Catálogo de casos de uso (CU-01–CU-17)}}
+**Tabla 11.** *Catálogo de casos de uso (CU-01–CU-17)*
 
 | ID | Caso de uso | Actor principal | RF asociados | Servicio focal |
 |----|-------------|-----------------|--------------|----------------|
@@ -378,7 +377,11 @@ Dos casos de uso internos no aparecen en la tabla porque los realiza el propio s
 
 El Diagrama 2 (Figura 2) describe el flujo de autenticación completo, incluyendo la validación de límite de peticiones en el gateway, la verificación de credenciales, el control de bloqueos en Redis y la emisión de los tokens.
 
-{{figura: diagramas/exports/es/02-seq-login.svg|Secuencia de autenticación de usuario|Elaboración propia a partir de CU-02 y RF1.1 (Entregable 02), HU-IAM-002 y RNF4.}}
+**Figura 2.** *Secuencia de autenticación de usuario*
+
+![Secuencia de autenticación de usuario](diagramas/exports/es/02-seq-login.svg)
+
+*Nota.* Elaboración propia a partir de CU-02 y RF1.1 (Entregable 02), HU-IAM-002 y RNF4.
 
 Nota de elaboración: los caminos alternativos de credenciales inválidas y cuenta bloqueada están incluidos en el diagrama mediante la construcción `alt`.
 
@@ -386,13 +389,21 @@ Nota de elaboración: los caminos alternativos de credenciales inválidas y cuen
 
 El Diagrama 3 (Figura 3) describe la consulta del dashboard: validación de JWT en el borde, autorización por rol, consulta al modelo de lectura y presentación de la información, incluyendo el caso sin datos.
 
-{{figura: diagramas/exports/es/03-seq-dashboard.svg|Secuencia de consulta del dashboard ambiental|Elaboración propia a partir de CU-05 y CU-08, RF3.1, RF3.4 y RF9.3 (Entregable 02), HU-ANA-005 y RNF1.}}
+**Figura 3.** *Secuencia de consulta del dashboard ambiental*
+
+![Secuencia de consulta del dashboard ambiental](diagramas/exports/es/03-seq-dashboard.svg)
+
+*Nota.* Elaboración propia a partir de CU-05 y CU-08, RF3.1, RF3.4 y RF9.3 (Entregable 02), HU-ANA-005 y RNF1.
 
 ## 7.3 Ingesta de mediciones desde el sensor
 
 El Diagrama 4 (Figura 4) describe la ruta de datos ambientales: ingesta HTTP con `X-API-Key`, escritura transaccional en outbox, publicación en RabbitMQ, consumo idempotente, persistencia y evaluación de umbrales.
 
-{{figura: diagramas/exports/es/04-seq-ingesta.svg|Secuencia de ingesta de mediciones ambientales|Elaboración propia a partir de CU-17 y RF9.1 (Entregable 02), HU-SENS-002, HU-MON-001 y los ADR-004 y ADR-007.}}
+**Figura 4.** *Secuencia de ingesta de mediciones ambientales*
+
+![Secuencia de ingesta de mediciones ambientales](diagramas/exports/es/04-seq-ingesta.svg)
+
+*Nota.* Elaboración propia a partir de CU-17 y RF9.1 (Entregable 02), HU-SENS-002, HU-MON-001 y los ADR-004 y ADR-007.
 
 # 8. Diagrama de clases
 
@@ -400,9 +411,13 @@ El Diagrama 4 (Figura 4) describe la ruta de datos ambientales: ingesta HTTP con
 
 El Diagrama 5 (Figura 5) modela la estructura estática del dominio según el modelo táctico de DDD: entidades identificadas por su ID, objetos de valor inmutables y agregados con raíz propia.
 
-{{figura: diagramas/exports/05-diagrama-clases.svg|Diagrama de clases del modelo de dominio de EduAirControl|Elaboración propia a partir de la documentación de dominio del proyecto y del modelo entidad-relación del Entregable 06.}}
+**Figura 5.** *Diagrama de clases del modelo de dominio de EduAirControl*
 
-{{tabla: Bloques de construcción tácticos del dominio}}
+![Diagrama de clases del modelo de dominio de EduAirControl](diagramas/exports/05-diagrama-clases.svg)
+
+*Nota.* Elaboración propia a partir de la documentación de dominio del proyecto y del modelo entidad-relación del Entregable 06.
+
+**Tabla 12.** *Bloques de construcción tácticos del dominio*
 
 | Nombre | Tipo | Contexto acotado | Raíz de agregado | Tabla equivalente (Doc. 06) |
 |--------|------|------------------|------------------|-----------------------------|
@@ -593,7 +608,7 @@ Conclusión: la solución es operativamente factible, sujeta a la validación de
 
 ## 10.4 Cronograma de entrega
 
-{{tabla: Plan de sprints derivado de la matriz de trazabilidad}}
+**Tabla 13.** *Plan de sprints derivado de la matriz de trazabilidad*
 
 | Sprint | HU entregadas | Requisitos cubiertos | Foco |
 |--------|---------------|----------------------|------|
@@ -604,7 +619,7 @@ Conclusión: la solución es operativamente factible, sujeta a la validación de
 
 # 11. Análisis de riesgos
 
-{{tabla: Registro de riesgos del proyecto}}
+**Tabla 14.** *Registro de riesgos del proyecto*
 
 | # | Riesgo | Probabilidad | Impacto | Estrategia de mitigación | Fuente |
 |---|--------|--------------|---------|--------------------------|--------|
@@ -629,7 +644,6 @@ Conclusión: la solución es operativamente factible, sujeta a la validación de
 5. El riesgo dominante es la deriva documental entre decisiones arquitectónicas y código; su mitigación debe ser un ritual recurrente del equipo, no una actividad puntual.
 6. El documento queda como insumo directo para el `05_Diseno_Software` y para el plan de pruebas de la fase de evaluación.
 
-<div class="referencias" markdown="1">
 # Referencias
 
 - Docker. (n.d.). *Docker documentation*. https://docs.docker.com
@@ -650,15 +664,11 @@ Conclusión: la solución es operativamente factible, sujeta a la validación de
 - Spring. (n.d.). *Spring Boot reference documentation*. https://docs.spring.io/spring-boot/reference/
 - Spring. (n.d.). *Spring Cloud Gateway*. https://spring.io/projects/spring-cloud-gateway
 - WeasyPrint. (n.d.). *WeasyPrint*. https://weasyprint.org
-</div>
-
-{{salto}}
-
 # Anexo A. Matriz de trazabilidad requisito–historia–servicio
 
 La matriz vincula cada requisito `RFx.y` del Entregable 02 con su identificador en la versión previa de este documento (`FR-xxx`), la historia de usuario, la prueba de verificación, el servicio responsable y el estado reportado en la Sección 6 del Entregable 02.
 
-{{tabla: Matriz de trazabilidad RF → HU → servicio → prueba}}
+**Tabla 15.** *Matriz de trazabilidad RF → HU → servicio → prueba*
 
 | RF | Descripción abreviada | FR (previa) | HU | Prueba de verificación | Servicio | Estado (Doc. 02) |
 |----|-----------------------|-------------|----|------------------------|----------|------------------|

@@ -1,20 +1,15 @@
-{{portada}}
+> **Software Analysis of the EduAirControl Platform**  
+> María de los Ángeles Olaya García; Jhon Jairo Cortez Vargas  
+> Technology Program in Software Analysis and Development – 3145556, Servicio Nacional de Aprendizaje (SENA)  
+> Software Analysis and Development – 3145556  
+> All instructors of the program  
+> October 9, 2026 · 2025-2026
 
 # Abstract
 
 This document presents the software analysis of EduAirControl, a web platform for environmental monitoring and analysis in educational environments. The analysis defines the problem context, the scope of the minimum viable product, the actors, the functional and non-functional requirements, and the UML modelling of the system: use cases, sequence diagrams for the critical flows (authentication, dashboard query, and measurement ingestion), and a class diagram of the domain model. In addition, the logic of the core algorithms is described in pseudocode, the technical, economic, and operational feasibility of the solution is evaluated, and the main project risks are identified. The information comes from the project documentation, with the Software Requirements Specification (Deliverable 02) as the source of the `RF`, `RNF`, and `CU` identifiers, and is organized according to the analysis phase of the software life cycle. The document serves as a reference for the planning, design, and implementation phases and as evidence for the learning outcome related to specifying and evaluating software solution requirements.
 
 *Keywords:* software analysis, functional requirements, use cases, UML, environmental monitoring, microservices.
-
-{{salto}}
-
-<p class="h1-look"><strong>Table of Contents</strong></p>
-
-[TOC]
-
-{{salto}}
-
-<p class="paper-title">Software Analysis of the EduAirControl Platform</p>
 
 # 1. Introduction
 
@@ -24,7 +19,7 @@ The analysis was prepared from the project documentation, which acts as the sing
 
 The document is addressed to the development team, the evaluating instructor, and the actors involved in the planning and design phases. It is organized as follows: Section 2 (general description), Section 3 (scope and objectives), Section 4 (actors), Section 5 (requirements), Section 6 (use cases), Section 7 (sequence diagrams), Section 8 (class diagram), Section 9 (algorithms and logical processes), Section 10 (feasibility), Section 11 (risks), Section 12 (conclusions), references, and appendices.
 
-{{table: Project deliverables related to this document}}
+**Table 1.** *Project deliverables related to this document*
 
 | Deliverable | Content | Use in this document |
 |-------------|---------|----------------------|
@@ -41,7 +36,7 @@ The document is addressed to the development team, the evaluating instructor, an
 
 Educational institutions need to understand the environmental conditions of classrooms and other educational spaces (temperature, humidity, CO₂, and noise level). Before the system, sensor information was consulted in a fragmented and scattered way, which prevented measurements from being centralized, compared over time, and used to make decisions about the monitored spaces.
 
-{{table: Dimensions of the problem and their implication for the product}}
+**Table 2.** *Dimensions of the problem and their implication for the product*
 
 | Dimension | Current problem | Product implication |
 |-----------|-----------------|---------------------|
@@ -61,7 +56,7 @@ The product promise can be summarized in four commitments: (a) centralization of
 
 ## 2.3 System Components and Services
 
-{{table: Deployable components of the system}}
+**Table 3.** *Deployable components of the system*
 
 | Component | Responsibility | Port |
 |-----------|----------------|------|
@@ -87,7 +82,7 @@ The project is in the MVP development phase, with no released version. According
 
 ## 3.1 Minimum Viable Product Scope
 
-{{table: Capabilities included in the MVP}}
+**Table 4.** *Capabilities included in the MVP*
 
 | # | Capability | Description | Responsible service |
 |---|------------|-------------|---------------------|
@@ -103,7 +98,7 @@ The project is in the MVP development phase, with no released version. According
 
 ## 3.2 Out of Scope
 
-{{table: Capabilities excluded from the MVP}}
+**Table 5.** *Capabilities excluded from the MVP*
 
 | # | Excluded capability | Reason |
 |---|---------------------|--------|
@@ -129,7 +124,7 @@ In addition, sensor hardware development and external infrastructure services ar
 
 ## 3.4 Assumptions and Constraints
 
-{{table: Scope assumptions, constraints, and dependencies}}
+**Table 6.** *Scope assumptions, constraints, and dependencies*
 
 | Type | Condition | Consequence if it does not hold |
 |------|-----------|---------------------------------|
@@ -145,7 +140,7 @@ In addition, sensor hardware development and external infrastructure services ar
 
 # 4. System Actors
 
-{{table: Actors of the EduAirControl system}}
+**Table 7.** *Actors of the EduAirControl system*
 
 | Actor | Type | Description | Main interaction |
 |-------|------|-------------|------------------|
@@ -161,7 +156,7 @@ In addition, sensor hardware development and external infrastructure services ar
 
 Functional requirements describe what the system must do. The `RFx.y` identifiers are those of the **Software Requirements Specification (Deliverable 02)**, so both documents share a single nomenclature. They are gathered here with the responsible service, the user story (HU), and the priority; full traceability is provided in Appendix A.
 
-{{table: Functional requirements of the MVP (RF1.1–RF9.5)}}
+**Table 8.** *Functional requirements of the MVP (RF1.1–RF9.5)*
 
 | ID | Requirement | Responsible service | HU | Priority |
 |----|-------------|----------------------|----|----------|
@@ -213,7 +208,7 @@ Traceability note: the `FR-001` to `FR-017` identifiers used in previous version
 
 Non-functional requirements define the measurable qualities of the system; every target must be verifiable. The `RNF1`–`RNF10` identifiers are those of the Software Requirements Specification (Deliverable 02); the verification column is kept here, since it fixes how each target is demonstrated.
 
-{{table: Non-functional requirements and their acceptance targets}}
+**Table 9.** *Non-functional requirements and their acceptance targets*
 
 | ID | Category | Acceptance target | Verification |
 |----|----------|-------------------|--------------|
@@ -232,7 +227,7 @@ Non-functional requirements define the measurable qualities of the system; every
 
 Business rules are validated on every operation and may never be violated. The `INV-xxx` identifiers come from the domain model; the last column links each invariant to the equivalent rule in Section 10 of Deliverable 02 (Requirements Specification), which defines no identifiers of its own.
 
-{{table: Domain invariants (business rules)}}
+**Table 10.** *Domain invariants (business rules)*
 
 | ID | Rule | Violated when... | Associated rule (Doc. 02 §10) | Implementation |
 |----|------|------------------|-------------------------------|----------------|
@@ -255,11 +250,15 @@ The remaining rules of Doc. 02 §10 —identity and authorization on every prote
 
 Diagram 1 (Figure 1) shows the main actors of the system and the `CU-xx` use cases defined in Section 9 of Deliverable 02 (Requirements Specification). Query use cases include (`<<include>>`) the internal access control —credential validation and JWT issuance, and role-based authorization (`RBAC`)—, while management operations extend (`<<extend>>`) that control according to the role.
 
-{{figura: diagramas/exports/en/01-use-cases.svg|Use case diagram of the EduAirControl system|Elaborated from the CU-01–CU-17 catalog of Deliverable 02 and the RF requirements of Section 5.}}
+**Figure 1.** *Use case diagram of the EduAirControl system*
+
+![Use case diagram of the EduAirControl system](diagramas/exports/en/01-use-cases.svg)
+
+*Note.* Elaborated from the CU-01–CU-17 catalog of Deliverable 02 and the RF requirements of Section 5.
 
 ## 6.2 Use Case Catalog
 
-{{table: Use case catalog (CU-01–CU-17)}}
+**Table 11.** *Use case catalog (CU-01–CU-17)*
 
 | ID | Use case | Main actor | Associated RFs | Focal service |
 |----|----------|------------|----------------|---------------|
@@ -378,7 +377,11 @@ Two internal use cases do not appear in the table because the system performs th
 
 Diagram 2 (Figure 2) describes the complete authentication flow, including rate limiting at the gateway, credential verification, lockout control in Redis, and token issuing.
 
-{{figura: diagramas/exports/en/02-seq-login.svg|User authentication sequence|Elaborated from CU-02 and RF1.1 (Deliverable 02), HU-IAM-002, and RNF4.}}
+**Figure 2.** *User authentication sequence*
+
+![User authentication sequence](diagramas/exports/en/02-seq-login.svg)
+
+*Note.* Elaborated from CU-02 and RF1.1 (Deliverable 02), HU-IAM-002, and RNF4.
 
 Note: the alternative flows for invalid credentials and locked accounts are included in the diagram through the `alt` construct.
 
@@ -386,13 +389,21 @@ Note: the alternative flows for invalid credentials and locked accounts are incl
 
 Diagram 3 (Figure 3) describes the dashboard query: JWT validation at the edge, role authorization, read-model query, and information presentation, including the no-data case.
 
-{{figura: diagramas/exports/en/03-seq-dashboard.svg|Environmental dashboard query sequence|Elaborated from CU-05 and CU-08, RF3.1, RF3.4, and RF9.3 (Deliverable 02), HU-ANA-005, and RNF1.}}
+**Figure 3.** *Environmental dashboard query sequence*
+
+![Environmental dashboard query sequence](diagramas/exports/en/03-seq-dashboard.svg)
+
+*Note.* Elaborated from CU-05 and CU-08, RF3.1, RF3.4, and RF9.3 (Deliverable 02), HU-ANA-005, and RNF1.
 
 ## 7.3 Measurement Ingestion from the Sensor
 
 Diagram 4 (Figure 4) describes the environmental data path: HTTP ingestion with `X-API-Key`, transactional outbox writing, RabbitMQ publication, idempotent consumption, persistence, and threshold evaluation.
 
-{{figura: diagramas/exports/en/04-seq-ingest.svg|Environmental measurement ingestion sequence|Elaborated from CU-17 and RF9.1 (Deliverable 02), HU-SENS-002, HU-MON-001, and ADR-004 and ADR-007.}}
+**Figure 4.** *Environmental measurement ingestion sequence*
+
+![Environmental measurement ingestion sequence](diagramas/exports/en/04-seq-ingest.svg)
+
+*Note.* Elaborated from CU-17 and RF9.1 (Deliverable 02), HU-SENS-002, HU-MON-001, and ADR-004 and ADR-007.
 
 # 8. Class Diagram
 
@@ -400,9 +411,13 @@ Diagram 4 (Figure 4) describes the environmental data path: HTTP ingestion with 
 
 Diagram 5 (Figure 5) models the static structure of the domain according to the DDD tactical model: entities identified by their ID, immutable value objects, and aggregates with their own root.
 
-{{figura: diagramas/exports/05-diagrama-clases.svg|Class diagram of the EduAirControl domain model|Elaborated from the project domain documentation and the entity-relationship model of Deliverable 06.}}
+**Figure 5.** *Class diagram of the EduAirControl domain model*
 
-{{table: Tactical building blocks of the domain}}
+![Class diagram of the EduAirControl domain model](diagramas/exports/05-diagrama-clases.svg)
+
+*Note.* Elaborated from the project domain documentation and the entity-relationship model of Deliverable 06.
+
+**Table 12.** *Tactical building blocks of the domain*
 
 | Name | Type | Bounded context | Aggregate root | Equivalent table (Doc. 06) |
 |------|------|-----------------|----------------|----------------------------|
@@ -593,7 +608,7 @@ Conclusion: the solution is operationally feasible, subject to the validation of
 
 ## 10.4 Delivery Schedule
 
-{{table: Sprint plan derived from the traceability matrix}}
+**Table 13.** *Sprint plan derived from the traceability matrix*
 
 | Sprint | Delivered user stories | Covered requirements | Focus |
 |--------|------------------------|----------------------|-------|
@@ -604,7 +619,7 @@ Conclusion: the solution is operationally feasible, subject to the validation of
 
 # 11. Risk Analysis
 
-{{table: Project risk register}}
+**Table 14.** *Project risk register*
 
 | # | Risk | Probability | Impact | Mitigation strategy | Source |
 |---|------|-------------|--------|----------------------|--------|
@@ -629,7 +644,6 @@ Conclusion: the solution is operationally feasible, subject to the validation of
 5. The dominant risk is the documentary drift between architectural decisions and code; its mitigation must be a recurring team ritual rather than a one-off activity.
 6. The document serves as direct input for the `05_Diseno_Software` and for the test plan of the evaluation phase.
 
-<div class="referencias" markdown="1">
 # References
 
 - Docker. (n.d.). *Docker documentation*. https://docs.docker.com
@@ -650,15 +664,11 @@ Conclusion: the solution is operationally feasible, subject to the validation of
 - Spring. (n.d.). *Spring Boot reference documentation*. https://docs.spring.io/spring-boot/reference/
 - Spring. (n.d.). *Spring Cloud Gateway*. https://spring.io/projects/spring-cloud-gateway
 - WeasyPrint. (n.d.). *WeasyPrint*. https://weasyprint.org
-</div>
-
-{{salto}}
-
 # Appendix A. Requirement–Story–Service Traceability Matrix
 
 The matrix links each `RFx.y` requirement of Deliverable 02 with its identifier in the previous version of this document (`FR-xxx`), the user story, the verification test, the responsible service, and the status reported in Section 6 of Deliverable 02.
 
-{{table: Traceability matrix RF → HU → service → test}}
+**Table 15.** *Traceability matrix RF → HU → service → test*
 
 | RF | Abbreviated description | Previous FR | HU | Verification test | Service | Status (Doc. 02) |
 |----|-------------------------|-------------|----|-------------------|---------|------------------|
