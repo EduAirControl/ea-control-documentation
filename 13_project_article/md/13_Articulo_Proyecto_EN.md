@@ -50,7 +50,7 @@ Users and administrators of an institution need to understand the environmental 
 
 The team followed specification-driven development (SDD): context, domain, product and requirements were documented first, followed by architecture, data and API contracts. Documentation was organized into folders for governance, context, domain, product, requirements, architecture, data, API, UML, microservices, DevOps, quality, operations and project control.
 
-Design decisions were recorded as ADRs (architecture decision records). Among them, each service is an independent project with its own dedicated database schema and follows a **hexagonal architecture**, which separates the domain from inbound and outbound adapters. Service contracts are described in OpenAPI. Quality relied on automated tests, an end-to-end smoke test and a continuous integration pipeline; containerization was done with Docker Compose, and the path toward Kubernetes was prepared.
+Design decisions were recorded as ADRs (architecture decision records). Among them, each service is an independent project with its own database and follows a **hexagonal architecture**, which separates the domain from inbound and outbound adapters. Service contracts are described in OpenAPI. Quality relied on automated tests, an end-to-end smoke test and a continuous integration pipeline; containerization was done with Docker Compose, and the path toward Kubernetes was prepared.
 
 ## 5. Architecture and implemented solution
 
@@ -129,7 +129,7 @@ These tests cover application services, controllers, JWT, the Redis revocation l
 - A complete documentation set was delivered: requirements specification, analysis, technical proposal, design, database, test plan, quality, implementation, and technical, installation, administrator and user manuals.
 - The physical prototype demonstrates temperature, humidity and sound readings, and BLE provisioning.
 
-**Limitations.** (1) The final firmware that sends measurements to the API does not exist yet. (2) The MQ-135 is not calibrated. (3) There are no automated frontend tests. (4) Load testing, certified penetration testing and disaster recovery were not carried out. (5) The test plan still has to be executed in full and reviewed by the technical and functional owners.
+**Limitations.** (1) The final firmware that sends measurements to the API does not exist yet. (2) The MQ-135 is not calibrated. (3) There are no automated frontend tests. (4) Load testing, certified penetration testing and disaster recovery were not carried out. (5) The test plan still has to be executed in full and reviewed by the technical and functional owners. The project's open risks, including security ones, are recorded in Annex D.
 
 ## 8. Conclusions
 

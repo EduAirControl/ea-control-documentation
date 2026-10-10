@@ -50,7 +50,7 @@ Los usuarios y administradores de una institución necesitan entender el estado 
 
 El equipo trabajó con desarrollo guiado por especificación (SDD): primero se documentó el contexto, el dominio, el producto y los requisitos, y después la arquitectura, los datos y los contratos de API. La documentación se organizó en carpetas de gobierno, contexto, dominio, producto, requisitos, arquitectura, datos, API, UML, microservicios, DevOps, calidad, operación y control del proyecto.
 
-Las decisiones de diseño se registraron como ADR (registros de decisión de arquitectura). Entre ellas, cada servicio es un proyecto independiente con su propia base lógica (un esquema dedicado por servicio) y sigue una **arquitectura hexagonal**, que separa el dominio de los adaptadores de entrada y salida. Los contratos de los servicios se describen en OpenAPI. La calidad se apoyó en pruebas automatizadas, un smoke test de extremo a extremo y un pipeline de integración continua; la contenerización se hizo con Docker Compose y se dejó preparada la ruta hacia Kubernetes.
+Las decisiones de diseño se registraron como ADR (registros de decisión de arquitectura). Entre ellas, cada servicio es un proyecto independiente con su propia base de datos y sigue una **arquitectura hexagonal**, que separa el dominio de los adaptadores de entrada y salida. Los contratos de los servicios se describen en OpenAPI. La calidad se apoyó en pruebas automatizadas, un smoke test de extremo a extremo y un pipeline de integración continua; la contenerización se hizo con Docker Compose y se dejó preparada la ruta hacia Kubernetes.
 
 ## 5. Arquitectura y solución implementada
 
@@ -129,7 +129,7 @@ Estas pruebas cubren servicios de aplicación, controladores, JWT, lista de revo
 - Se entregó un conjunto documental completo: especificación de requisitos, análisis, propuesta técnica, diseño, base de datos, plan de pruebas, calidad, implementación y manuales técnico, de instalación, de administración y de usuario.
 - El prototipo físico demuestra la lectura de temperatura, humedad y sonido, y el aprovisionamiento por BLE.
 
-**Limitaciones.** (1) No existe aún el firmware definitivo que envíe mediciones a la API. (2) El MQ-135 no está calibrado. (3) No hay pruebas automatizadas del frontend. (4) No se realizaron pruebas de carga, de penetración certificada ni de recuperación ante desastres. (5) El plan de pruebas aún debe ejecutarse por completo y revisarse por los responsables técnico y funcional.
+**Limitaciones.** (1) No existe aún el firmware definitivo que envíe mediciones a la API. (2) El MQ-135 no está calibrado. (3) No hay pruebas automatizadas del frontend. (4) No se realizaron pruebas de carga, de penetración certificada ni de recuperación ante desastres. (5) El plan de pruebas aún debe ejecutarse por completo y revisarse por los responsables técnico y funcional. Los riesgos abiertos del proyecto, incluidos los de seguridad, están registrados en el Anexo D.
 
 ## 8. Conclusiones
 
