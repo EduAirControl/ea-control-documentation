@@ -83,7 +83,7 @@ Las imágenes `image.png` a `image-38.png` provienen de los manuales técnico, d
 
 ## Anexo F. Inventario de pruebas
 
-`Inventario_Pruebas_Automatizadas.csv` lista cada método de prueba por servicio y clase, su tipo y si requiere Docker. La columna de resultado está en `NOT RUN`: se actualiza con la ejecución real (ver carpeta `07_Pruebas`).
+`Inventario_Pruebas_Automatizadas.csv` lista cada método de prueba por servicio y clase, su tipo y si requiere Docker. La columna de resultado refleja la corrida del **13 de octubre de 2026**: **327 métodos en `PASS`** y 12 en `OBSOLETE` (pruebas que ya no existen en el código); el detalle está en el informe de la carpeta `07_Pruebas`.
 
 ## Material citado que no estaba en el zip
 

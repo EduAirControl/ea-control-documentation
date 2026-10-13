@@ -85,7 +85,7 @@ The images `image.png` to `image-38.png` come from the technical, installation, 
 
 ## Annex F. Test inventory
 
-`Inventario_Pruebas_Automatizadas.csv` lists every test method by service and class, its type and whether it needs Docker. The result column is `NOT RUN`: it is updated with the real execution (see the `07_Pruebas` folder).
+`Inventario_Pruebas_Automatizadas.csv` lists every test method by service and class, its type and whether it needs Docker. The result column reflects the **October 13, 2026** run: **327 methods marked `PASS`** and 12 marked `OBSOLETE` (tests that no longer exist in the code); the detail is in the report under the `07_Pruebas` folder.
 
 ## Cited material that was not in the zip
 

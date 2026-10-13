@@ -126,21 +126,34 @@ Antes de iniciar la ejecución:
 
 ## 8. Pruebas automatizadas existentes
 
-Los servicios ya incluyen pruebas en sus carpetas `src/test`. Deben ejecutarse con:
+Los servicios ya incluyen pruebas en sus carpetas `src/test`. Deben ejecutarse con `clean` para no heredar clases compiladas de corridas anteriores:
 
 ```bash
-./mvnw -B verify
+./mvnw -B clean verify
 ```
 
 En Windows:
 
 ```bat
-mvnw.cmd -B verify
+mvnw.cmd -B clean verify
 ```
 
-Ejemplos de cobertura funcional existente:
+Resultado de la corrida del **13 de octubre de 2026** en los siete servicios (0 errores, 0 fallos):
 
-| Servicio | Pruebas identificadas |
+| Servicio | Pruebas | Reparto por tipo |
+|---|---|---|
+| API Gateway | 27 | 21 unitarias; 6 de integración con simulacros |
+| Security | 67 | 28 unitarias; 39 de rebanada |
+| Classroom | 35 | 10 unitarias; 25 de rebanada |
+| Sensor | 63 | 41 unitarias; 22 de rebanada |
+| User Management | 22 | 8 unitarias; 14 de rebanada |
+| Monitoring | 103 | 28 unitarias; 75 Testcontainers |
+| User Experience | 10 | 10 Testcontainers |
+| **Total** | **327** | **136 unitarias; 100 de rebanada; 6 con simulacros; 85 Testcontainers** |
+
+Cobertura funcional existente:
+
+| Servicio | Qué cubren |
 |---|---|
 | API Gateway | Gateway, rutas públicas, JWT, JWKS, correlation ID y rate limit |
 | Security | Autenticación, contraseñas, OAuth2, JWT, instituciones, Super Admin y blacklist Redis |
@@ -150,7 +163,7 @@ Ejemplos de cobertura funcional existente:
 | User Management | Servicio y controlador de perfil |
 | User Experience | Controlador, backfill y contexto PostgreSQL |
 
-El resultado de cada `verify` debe conservarse en la evidencia de la ejecución. Si una prueba es deshabilitada, debe registrarse la razón y la fecha de corrección prevista.
+El detalle método a método está en `../Inventario_Pruebas_Automatizadas.csv` (327 en `PASS`, 12 en `OBSOLETE`) y el análisis en `07_Informe_Pruebas_Unitarias_ES.md` / `07_Unit_Tests_Report_EN.md`. El resultado de cada `verify` debe conservarse en la evidencia de la ejecución. Si una prueba es deshabilitada, debe registrarse la razón y la fecha de corrección prevista.
 
 ## 9. Matriz de casos funcionales
 
@@ -384,22 +397,31 @@ La carpeta debe conservar una estructura por ejecución:
 
 ```text
 07_Pruebas/
-├── Plan_Pruebas.md
-├── Plan_Pruebas.pdf
+├── README.md                              # índice de esta carpeta
+├── Inventario_Pruebas_Automatizadas.csv   # 327 pruebas PASS · 12 OBSOLETE (corrida 2026-10-13)
+├── ejecutar_pruebas.ps1
+├── md/
+│   ├── Plan_Pruebas.md
+│   ├── 07_Informe_Pruebas_Unitarias_ES.md
+│   └── 07_Unit_Tests_Report_EN.md
+├── pdf/
+│   ├── Plan_Pruebas.pdf
+│   ├── 07_Informe_Pruebas_Unitarias_ES.pdf
+│   └── 07_Unit_Tests_Report_EN.pdf
 └── Evidencias/
     ├── README.md
-    ├── 2026-10-09_local_v1.0/
-    │   ├── 00_Reporte_Ejecucion.md
-    │   ├── 01_Ambiente/
-    │   ├── 02_Autenticacion/
-    │   ├── 03_Ambientes_Sensores/
-    │   ├── 04_Monitoreo_Alertas/
-    │   ├── 05_Web/
-    │   ├── 06_Movil/
-    │   ├── 07_IoT/
-    │   ├── 08_API_Logs/
-    │   └── 09_CI_Despliegue/
-    └── Plantilla_Evidencia.md
+    ├── Plantilla_Evidencia.md
+    └── YYYY-MM-DD_<ambiente>_<version>/
+        ├── 00_Reporte_Ejecucion.md
+        ├── 01_Ambiente/
+        ├── 02_Autenticacion/
+        ├── 03_Ambientes_Sensores/
+        ├── 04_Monitoreo_Alertas/
+        ├── 05_Web/
+        ├── 06_Movil/
+        ├── 07_IoT/
+        ├── 08_API_Logs/
+        └── 09_CI_Despliegue/
 ```
 
 Nomenclatura recomendada:
