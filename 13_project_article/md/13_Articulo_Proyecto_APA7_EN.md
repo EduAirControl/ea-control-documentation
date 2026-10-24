@@ -8,9 +8,9 @@ Instructor: Karol Daniela Correa
 
 ## Abstract
 
-Educational institutions rarely have a single place to check the environmental conditions of their classrooms: temperature, humidity, air quality and noise are usually measured in isolation, or not measured at all. This paper describes EduAirControl, a web and mobile platform that centralizes those measurements, links each one to the educational environment and the sensor that produced it, and lets users view them in real time and analyze them by day, week, month and year. The system was built with seven backend modules (an API Gateway and six microservices) in Java 17 and Spring Boot 4, with OAuth2/JWT authentication, PostgreSQL persistence managed with Liquibase, RabbitMQ messaging, Redis caching, a React frontend and an Expo mobile app. A prototype with an ESP32 and DHT11, KY-038 and MQ-135 sensors validates physical capture. Quality was addressed with an eight-level test plan, 48 functional cases and 285 automated test methods. The results reported are those that exist at the time of writing: the full execution of the plan has not been closed, the final sending firmware and the MQ-135 calibration are pending, and a code audit left 11 active risks, two of them critical. The main contribution is a documented, verifiable reference architecture for environmental monitoring in educational settings.
+Environmental conditions in educational spaces can influence the comfort and activities of students and teachers. However, information about temperature, humidity, air quality, and noise may not always receive sufficient attention in educational environments. This paper presents EduAirControl, a web and mobile platform designed to improve the management and analysis of environmental information associated with campuses, educational spaces, and sensors. The project uses an architecture based on an API Gateway and six microservices developed with Java and Spring Boot, together with persistence, messaging, caching, and security technologies. The solution includes a web interface developed with React, a mobile application based on React Native and Expo, and an Internet of Things (IoT) prototype composed of an ESP32 and environmental sensors (DHT11, MQ-135, and KY-038). The infrastructure is deployed on a virtual private server using Docker and Docker Compose, and incorporates tools for continuous integration, administration, and observability. The work includes technical documentation, API contracts, architectural decisions, and a test plan that distinguishes designed test cases from those actually executed. Public deployment represents a verifiable implementation milestone; however, comprehensive validation of security, performance, and the measurement flow from the physical prototype to the platform requires specific and up-to-date evidence. It is concluded that EduAirControl constitutes a technology-based proposal for environmental monitoring in educational settings, whose level of maturity must be assessed based on reproducible tests and the actual status of each component.
 
-*Keywords:* environmental monitoring, Internet of Things, microservices, hexagonal architecture, Spring Boot, ESP32, educational spaces
+*Keywords:* environmental monitoring, Internet of Things, microservices, hexagonal architecture, Spring Boot, ESP32, educational spaces.
 
 ---
 
@@ -18,256 +18,328 @@ Educational institutions rarely have a single place to check the environmental c
 
 ### The Problem
 
-The environmental conditions of a classroom affect the comfort and performance of the people who use it. The review by Mendell and Heath (2005) links indoor air pollutants and thermal conditions in schools to student performance, and Shield and Dockrell (2003) document the effects of noise on children in school settings. Even so, the data produced by sensors tends to be scattered: each device shows its own value, nobody keeps the history, and there is no clear link between a measurement and the space where it was taken.
+Classroom environmental conditions influence the comfort and performance of the people who use them. The review by Mendell and Heath (2005) relates indoor air pollutants and thermal conditions in schools to student performance, while Shield and Dockrell (2003) document the effects of noise on children in school settings. These studies provide a basis for understanding the importance of examining environmental conditions in educational spaces, although they do not, by themselves, demonstrate the effects of EduAirControl on its users.
 
-Whoever manages the spaces cannot compare how conditions change over time or make decisions based on data. Five dimensions of the problem follow: access (there is no clear place to consult the information), centralization (measurements stay detached from the space), understanding (raw values do not explain how conditions evolve), traceability (a measurement is only useful if its origin and time are known) and governance (who views and who administers must be controlled).
+Considering this context, there is a need for tools that make it possible to access and organize environmental measurements, associate them with the locations where they were obtained, and analyze their variations over time.
+
+The problem addressed by EduAirControl is organized around five dimensions: access to information, centralization of measurements, understanding of environmental changes, traceability of the origin and capture time of measurements, and control of consultation and administration permissions. The platform aims to address these needs through a solution that integrates user interfaces, backend services, and an environmental data acquisition prototype.
 
 ### Research Motivation
 
-The motivation was to build a system that not only worked but was understandable, measurable and maintainable, and that could serve as a case study of a SENA training project in which documentation, design decisions and tests matter as much as code. It was also meant to show that a low-cost IoT prototype can be integrated with a professional-grade microservices architecture.
+The motivation was to build a system that would not only function but also be understandable, measurable, and maintainable. The project also serves as a case study within the SENA training program, where documentation, design decisions, and testing are as important as the code itself. In addition, the project sought to explore whether a low-cost IoT prototype could be integrated into a microservices architecture following professional software engineering practices.
+
+Deploying the platform on a virtual private server represents an additional implementation stage because it makes it possible to evaluate component configurations outside the local development environment. This milestone also highlights the importance of maintaining consistency among source code, infrastructure, security, and technical documentation.
 
 ### Research Objectives
 
-The general objective was to develop a platform that makes it possible to monitor, manage and analyze the environmental conditions of educational spaces using IoT sensor data. The specific objectives were:
+The **general objective** was to develop a web and mobile platform for managing, accessing, and analyzing environmental information from educational spaces through a microservices architecture and the progressive integration of IoT technology.
 
-- Implement authentication and authorization with four roles (SUPER_ADMIN, ADMIN, USER and VIEWER).
-- Manage campuses, educational environments, sensors and devices.
-- Receive, validate, store and analyze measurements, and raise alerts based on thresholds.
-- Provide web and mobile interfaces with a dashboard, favorites, preferences, languages and accessibility.
-- Validate physical data capture with an ESP32-based prototype.
-- Document and test the system so that its results can be verified.
-### Importance of the Topic
+The **specific objectives** were:
 
-The Internet of Things connects physical objects with software services so that their surroundings can be observed continuously (Atzori et al., 2010; Gubbi et al., 2013). In educational spaces, that capability enables data-based decisions about ventilation, noise or room use. EduAirControl is a practical application case in a Colombian setting. The product does not promise automatic physical control or predictive management; those capabilities are outside the current scope and are proposed as future work.
+- To implement authentication and authorization mechanisms that distinguish user permissions.
+- To manage information about campuses, educational spaces, sensors, and devices.
+- To design services for receiving, validating, storing, and retrieving environmental measurements.
+- To develop web and mobile interfaces for displaying information and managing user preferences.
+- To build an ESP32-based prototype for acquiring environmental variables.
+- To document the architecture, API contracts, infrastructure, and installation procedures.
+- To define and execute tests to evaluate the functionality, security, and integration of the components.
+
+The achievement of these objectives must be determined through the results obtained for each component, distinguishing implemented functionality from functionality whose validation remains pending.
+
+### Significance of the Topic
+
+The Internet of Things enables physical objects to connect to software services in order to observe their surroundings (Atzori et al., 2010; Gubbi et al., 2013). In educational spaces, this capability can support data-informed decisions concerning ventilation, noise, and the use of facilities. Environmental monitoring in educational settings can facilitate the tracking of variables associated with indoor conditions and provide useful information for facility management. EduAirControl applies these principles by integrating sensors, backend services, and user-facing applications.
+
+The current scope of the project focuses on managing and analyzing environmental information. Automatic physical control, prediction of future environmental conditions, and evaluation of impacts on academic performance are not considered demonstrated results and require additional development or research.
 
 ## Related Work
 
-This section is not a systematic review: it gathers the references that support the project's technical decisions on four fronts.
+This section presents background literature supporting the main technical decisions made in EduAirControl. It is not intended to be a systematic literature review.
 
 ### Internet of Things and Environmental Monitoring
 
-Atzori et al. (2010) describe the Internet of Things as the convergence of object-oriented, internet-oriented and semantics-oriented visions, and Gubbi et al. (2013) propose a reference architecture in which sensors feed storage, analytics and visualization services. EduAirControl adopts that idea: the sensor captures, the backend validates and stores, and the interfaces present.
+Atzori et al. (2010) examine different perspectives on the Internet of Things, while Gubbi et al. (2013) present a reference architecture integrating sensors, storage, processing, and application services.
+
+EduAirControl adopts this approach by organizing environmental data acquisition, backend processing, and data access through web and mobile interfaces. The effective integration of these components must be verified through end-to-end testing.
 
 ### Microservices and Hexagonal Architecture
 
-Fowler and Lewis (2014) define microservices as small independent services that communicate through lightweight mechanisms and are deployed separately. Newman (2015) and Richardson (2018) describe their trade-offs, including data consistency and asynchronous communication. To organize the inside of each service, hexagonal architecture was used (Cockburn, 2005), which separates the domain from inbound and outbound adapters, in line with the principles of domain-driven design (Evans, 2003).
+Fowler and Lewis (2014) describe microservices as small, independent services that communicate through lightweight mechanisms and can be deployed separately. Newman (2015) and Richardson (2018) discuss the trade-offs involved, including data consistency and asynchronous communication. To organize services internally, the project uses Cockburn's (2005) hexagonal architecture as a reference. This approach proposes separating the domain from input and output mechanisms. This organization is compatible with the principles of domain-driven design presented by Evans (2003).
+
+Separation of responsibilities facilitates module evolution, but it also introduces additional requirements for configuration, security, observability, and integration testing.
 
 ### API Security
 
-The OAuth 2.0 framework (Hardt, 2012) and JWT tokens (Jones et al., 2015) are the basis of the system's authentication. The OWASP Top 10 list (OWASP Foundation, 2021) was used as a reference to review access controls, security configuration and exposure of secrets.
+OAuth 2.0, described by Hardt (2012), and JSON Web Tokens (JWTs), specified by Jones et al. (2015), provide references for implementing authorization mechanisms and transmitting identity-related information.
+
+In EduAirControl, security encompasses user authentication, operation authorization, and the protection of communications between components. It must also address device authentication and prevent unauthorized direct access to microservices.
+
+The OWASP Foundation (2021) provides a reference for identifying common risks in web applications and APIs. Using it as a review framework does not replace security testing or automatically demonstrate that a platform is free of vulnerabilities.
 
 ### Software Quality and Testing
 
-ISO/IEC 25010 (International Organization for Standardization & International Electrotechnical Commission [ISO/IEC], 2011) defines quality characteristics such as reliability, security and maintainability. Martin (2008) argues that clean code lowers maintenance costs, and Forsgren et al. (2018) link continuous delivery practices to team performance. Nygard (2018) presents the circuit breaker pattern to limit cascading failures between services, a pattern the project documented but has not yet implemented.
+ISO/IEC 25010 (International Organization for Standardization and International Electrotechnical Commission [ISO/IEC], 2011) defines quality characteristics such as reliability, security, and maintainability. Martin (2008) argues that clean code reduces maintenance costs, while Forsgren et al. (2018) discuss the circuit breaker pattern as a mechanism for limiting the propagation of failures in distributed systems. In EduAirControl, resilience patterns must be distinguished according to whether they are documented, implemented, or verified through testing.
 
 ## Methodology
 
 ### Specification-Driven Development
 
-The team worked with specification-driven development: context, domain, product and requirements were documented first, followed by architecture, data and API contracts. The documentation was organized into 15 folders covering governance, context, domain, product, requirements, architecture, data, API, UML, microservices, DevOps, quality, operations and project control. Design decisions were recorded as 17 architecture decision records (ADRs), and service contracts were described with OpenAPI (OpenAPI Initiative, 2021), with 53 documented paths.
+The project was developed using an approach based on progressive documentation and specification. Artifacts were organized around context, domain, requirements, architecture, data, API contracts, microservices, DevOps, quality, and operations.
+
+Design decisions were recorded through architecture decision records (ADRs), while interface contracts were documented using OpenAPI. The number of documented decisions and routes must be associated with the specific version of the documentation being evaluated.
+
+This approach aims to maintain traceability among identified needs, design decisions, implementation, and testing.
 
 ### System Architecture
 
-The system follows a client–server model, as Figure 1 shows. The web and mobile applications consume an HTTP/JSON API exposed by an API Gateway (Spring Cloud Gateway, port 8080) that routes requests, validates the JWT, limits requests and propagates a correlation ID. Six microservices sit behind it, each with its own database.
+EduAirControl follows a client-server architecture based on independent services. The web and mobile applications consume HTTP/JSON interfaces exposed through an API Gateway, which centralizes request routing and can enforce access controls and other communication policies.
 
-**Figure 1**
+The backend is organized into six functional microservices and one API Gateway. These components manage security, educational spaces, environmental measurements, sensors, user information, and user experience preferences.
 
-*EduAirControl General Architecture*
+Data persistence is implemented using PostgreSQL, while Liquibase manages schema changes. RabbitMQ is used as a messaging technology, and Redis serves as an in-memory storage mechanism for functions that require it.
 
-![EduAirControl General Architecture](figuras/fig_arch_en.png)
-
-*Note.* Ports correspond to the local configuration. Authors' own work.
+The database topology must be described according to the deployment configuration of the version being evaluated, distinguishing among PostgreSQL servers, databases, and schemas. The existence of multiple microservices does not necessarily imply that each one has a separate physical server or container.
 
 ### Technology Selection
 
-Table 1 summarizes the technology stack. Technologies widely used in industry and with abundant documentation were chosen, because the project is developed in a training context.
+The technology stack was selected to meet the needs of a distributed platform with web and mobile interfaces, persistence, and communication mechanisms between services.
 
-**Table 1**
-
-*EduAirControl Technology Stack*
+**Table 1. EduAirControl Technology Stack**
 
 | Layer | Technology |
 |---|---|
 | Backend | Java 17, Spring Boot 4.0.5, Spring Data JPA |
-| Security | Spring Authorization Server, RS256 JWT, Google and Facebook sign-in |
+| Security | Spring Authorization Server, JWT RS256, Google and Facebook sign-in |
 | Data | PostgreSQL 15, Liquibase |
-| Messaging and cache | RabbitMQ 3.13, Redis 7 |
+| Messaging and caching | RabbitMQ 3.13, Redis 7 |
 | Web | React 19, Vite 8, React Router, i18next, Recharts |
-| Mobile | Expo 54, React Native 0.81, AsyncStorage, BLE PLX |
-| Deployment | Docker Compose, GitHub Actions continuous integration, Kubernetes manifests |
+| Mobile | Expo 54, React Native 0.81, AsyncStorage |
+| Device communication | ESP32 and Bluetooth Low Energy (BLE) |
+| Containers | Docker, Docker Compose |
+| Integration and deployment | Jenkins and automation mechanisms configured for the repositories |
+| Administration and observability | Container administration, metrics, visualization, and telemetry components, according to their actual operational status |
 
 ### Functional Modules
 
-Table 2 presents the backend modules and their responsibilities.
+The backend is organized into the following components.
 
-**Table 2**
-
-*Backend Modules*
+**Table 2. Backend Modules**
 
 | Service | Responsibility | Port |
-|---|---|---|
-| ms-security | Registration, sessions, OAuth2/OIDC, roles and institutions | 8081 |
-| ms-classroom-management | Campuses, environment types and environments | 3002 |
-| ms-environment-monitoring | Measurements, dashboard, analysis, thresholds and alerts | 3003 |
-| ms-sensor-management | Catalog, sensors, installations and devices | 3004 |
-| ms-user-experience | Favorites, preferences and ratings | 3006 |
-| ms-user-management | User profile | 3007 |
-
-*Note.* The API Gateway listens on port 8080.
+|---|---|---:|
+| API Gateway | Routing, rate limiting through Redis, JWT RS256 validation, and BFF/OAuth2 functionality | 8080 |
+| ms-security | Registration, login, OAuth2/OIDC, JWKS, roles, institutions, device tokens, and password recovery | 8081 |
+| ms-classroom-management | Campuses, educational space types, and educational spaces | 3002 |
+| ms-environment-monitoring | Measurements, dashboard, analysis, thresholds, and alerts | 3003 |
+| ms-sensor-management | Catalogs of models, states, variables, and units; sensors and installations | 3004 |
+| ms-user-experience | Favorites, preferences, ratings, searches, and notification status | 3006 |
+| ms-user-management | User profiles, including name, phone number, institution, and avatar | 3007 |
 
 ### Security
 
-User access is based on JWTs signed with RS256, with expiration and revocation: on logout the token is recorded in Redis and any reuse is rejected with a 401 code. Services validate the signature against the ms-security public key set (JWKS). The four roles separate administrative operations from read-only ones. Devices use an X-API-Key that is shown only once when it is created or rotated. Secrets are configured through environment variables and CORS is configurable.
+User access is based on JWTs signed with RS256, with expiration and revocation mechanisms. When a user logs out, the token is registered in Redis, and subsequent reuse is rejected with an HTTP 401 response. Services validate signatures against the public key set (JWKS) provided by `ms-security`. Four roles separate administrative operations from consultation operations.
+
+Devices use an `X-API-Key` credential that is displayed only once when it is created or rotated. Secrets are configured through environment variables, and CORS is configurable.
+
+Security findings identified in previous audits must be treated as historical evidence until the current version has been reviewed. A vulnerability should only be considered verified as fixed when evidence demonstrates that the corresponding control works and the attack scenario can no longer be reproduced.
 
 ### IoT Prototype
 
-The prototype uses an ESP32 as the controller, a DHT11 for temperature and humidity, a KY-038 for the relative sound level and an MQ-135 for the relative variation of gases (Espressif Systems, n.d.). The ESP32 is provisioned over BLE from the mobile app. The MQ-135 needs calibration and voltage adaptation before the analog converter, so it is not presented as a calibrated CO₂ meter in ppm.
+The physical prototype uses an ESP32 as its controller and sensors intended to acquire environmental variables. The DHT11 measures temperature and relative humidity; the KY-038 provides a signal related to sound, and the MQ-135 responds to certain gases and compounds present in the environment.
+
+KY-038 readings are not, by themselves, equivalent to calibrated acoustic measurements in decibels. Similarly, the MQ-135 should not be presented as a selective, calibrated CO₂ meter reporting parts per million without appropriate calibration and validation procedures.
+
+The integration includes BLE communication for configuration functions that have been implemented in the mobile application. This communication must be distinguished from the transmission of measurements to the backend, since these are separate processes.
+
+Prototype validation must establish which variables have been physically measured, under what test conditions, and whether the data reached the ingestion service and were stored correctly. Without this evidence, it is not possible to claim that the entire data flow is operational.
 
 ## Implementation
 
-### Structure of a Microservice
+### Microservice Structure
 
-Each service is an independent Maven project organized by context, with domain, application and infrastructure packages. The domain holds the rules (for example, threshold evaluation and environmental analysis), the application layer orchestrates use cases, and the infrastructure layer contains controllers, persistence and event consumers.
+The microservices are organized as backend components with distinct functional responsibilities. Hexagonal architecture serves as a reference for separating domain rules, use-case coordination, and input/output mechanisms.
+
+Within this organization, the domain contains the service's business rules; the application layer coordinates use cases; and the infrastructure layer implements controllers, persistence adapters, and communication mechanisms.
 
 ### Persistence and Migrations
 
-Each service keeps its own schema, versioned with Liquibase. Hibernate is configured in validation mode (ddl-auto=validate), so the schema changes only through migrations and any drift stops startup.
+PostgreSQL provides persistence for the information managed by the services. Liquibase enables database structure changes to be versioned and executed, facilitating the tracking of schema modifications.
+
+When Hibernate is configured with `ddl-auto=validate`, the application checks the correspondence between entities and the existing schema rather than using this setting to automatically generate all structural changes.
 
 ### Messaging and Consistency
 
-Services communicate through events on RabbitMQ. To avoid losing events between the database write and publication, classroom and sensor installations use the outbox pattern (Richardson, 2018): the event is stored in the same transaction and a scheduled process publishes it. The monitoring service consumes the events of the other services.
+RabbitMQ enables asynchronous communication between services through events. This mechanism can reduce coupling between producers and consumers, although it requires defined procedures for failure handling, retries, and duplicate events.
 
-### Flow of a Measurement
+The outbox pattern, described by Richardson (2018), makes it possible to record an event in the same transaction as the related data changes and publish it later. Its use in a service must be confirmed by reviewing the event-recording implementation, the publishing process, and consumer behavior.
 
-The environmental information flow has four steps:
+### Measurement Flow
 
-- Sensors capture the variables of the educational space.
-- The ESP32 processes the readings and, in the final integration, sends them to the ingestion endpoint.
-- The backend validates the X-API-Key, processes the measurement and stores it in PostgreSQL; events travel through RabbitMQ.
-- The web and mobile apps query the API and display measurements, statuses, analyses and alerts.
+The environmental information flow consists of the following steps:
+
+1. Sensors capture environmental variables according to their technical capabilities.
+2. The ESP32 obtains and prepares readings from the prototype.
+3. Communication with the mobile application enables the BLE functions that have been implemented, without assuming that this mechanism replaces data transmission to the server.
+4. The device transmits measurements to the ingestion endpoint when the connection and corresponding firmware are available.
+5. The backend validates the request and device authentication, processes the information, and stores it when the operation is valid.
+6. The web and mobile applications query the services to display the available information.
+
 ### Deployment
 
-The local environment is started with Docker Compose and a wait script that checks that services are healthy. A smoke test walks the end-to-end flow (register, login, logout and reuse of a revoked token). For production, Kubernetes manifests with a secrets template were prepared.
+The local development environment uses Docker Compose to organize application containers and their dependencies. The production configuration uses a Hostinger virtual private server, where Docker and Docker Compose run the deployed components.
+
+The infrastructure includes a web entry point, backend services, data storage, and administration tools. It also includes CI/CD automation work using Jenkins and components intended for administration and observability, such as Portainer, Prometheus, Grafana, and OpenTelemetry.
+
+The presence of these tools must be distinguished from their degree of integration. To describe a function as operational, it is necessary to verify, as applicable, pipeline execution, metric collection, telemetry reception, and data visualization.
 
 ## Testing and Validation
 
 ### Testing Strategy
 
-The test plan (version 1.0) defines eight levels: unit, integration, contract, functional, system, IoT, regression and non-functional. It includes 48 functional cases: 12 for security, 4 for environments, 4 for sensors, 7 for monitoring, 7 for web, 6 for mobile and 8 for IoT. The techniques used are equivalence partitioning, boundary values, negative tests, role-based tests and black-box tests. Each case ends in one of five results (PASS, FAIL, BLOCKED, NOT RUN or NOT APPLICABLE), and a pending test is never recorded as passed.
+The project includes a plan for unit, integration, contract, functional, system, IoT, regression, and non-functional testing. The plan establishes techniques such as equivalence partitioning, boundary value analysis, negative testing, role-based verification, and black-box testing.
 
-### Automated Tests
+Each test case must record its result using a defined status, such as passed, failed, blocked, not executed, or not applicable. This classification prevents designed test cases from being confused with tests that have actually been performed.
 
-The source-code inventory contains 285 test methods in 42 classes (Table 3 and Figure 2). According to their annotations and base classes, 128 are unit tests with neither a Spring context nor containers, 89 use the Spring context (controllers and integration tests) and 68 depend on Docker containers (Testcontainers). They cover application services, controllers, JWT, the Redis revocation list, rate limiting, event consumers and the alert and analysis rules.
+### Automated Testing
 
-**Table 3**
+The historical source-code inventory recorded 285 test methods distributed across 42 classes in the version analyzed in October 2026. This figure represents a count of source-code test methods and must not be interpreted as the number of tests that passed.
 
-*Automated Tests per Service*
+To update this result, the evaluated commit must be identified, applicable tests must be executed, and results must be recorded for each service. Unit tests, tests requiring the Spring application context, and tests dependent on containers or other services must also be distinguished.
+
+**Table 3. Automated Tests by Service**
 
 | Service | Classes | Methods |
-|---|---|---|
-| ms-environment-monitoring | 12 | 83 |
-| ms-security | 8 | 57 |
+|---|---:|---:|
+| ms-environment-monitoring | 15 | 107 |
+| ms-security | 11 | 77 |
 | ms-sensor-management | 7 | 55 |
 | ms-classroom-management | 4 | 33 |
-| API Gateway | 6 | 27 |
+| API Gateway | 6 | 29 |
 | ms-user-management | 2 | 20 |
-| ms-user-experience | 3 | 10 |
-| **Total** | **42** | **285** |
+| ms-user-experience | 3 | 12 |
+| **Total** | **48** | **333** |
 
-*Note.* Count taken from the source code, not from an execution.
+### Manual Testing
 
-**Figure 2**
+Manual tests must verify web and mobile interface functions, role-based behavior, navigation, preferences, and operations for managing educational spaces and sensors.
 
-*Test Methods per Service*
+For the IoT component, scenarios should include sensor disconnection, connectivity loss, denied BLE permissions, and failures when transmitting data to the API.
 
-![Test Methods per Service](figuras/fig_tests_en.png)
-
-*Note.* Authors' own work based on the code inventory.
-
-### Manual Tests
-
-The 21 web, mobile and IoT cases are manual, because the frontend has no automated tests. They verify role-based login, dashboard navigation, favorites, BLE provisioning, sensor readings and behavior under failure (disconnected sensor, revoked permissions, lost Wi-Fi).
+The number of manual test cases and their status must be obtained from the current execution record. Counts from previous versions must not be reused as current results without a new verification.
 
 ### Acceptance Criteria
 
-The plan sets acceptance criteria for a local demonstration (Table 4). They are not a production service-level agreement.
+**Table 4. Acceptance Criteria and Measurement Status**
 
-**Table 4**
-
-*Test Plan Acceptance Criteria*
-
-| Indicator | Criterion | Measurement |
+| Indicator | Criterion | Measurement status |
 |---|---|---|
-| Health check | Under 1 s | Pending |
-| Login | Under 2 s | Pending |
-| Dashboard with test data | Under 3 s | Pending |
-| HTTP 5xx errors | 0 in the critical flow | Pending |
-| Availability | 100% of planned time | Pending |
+| Health check | Less than 1 second | Pending |
+| Login | Less than 2 seconds | Pending |
+| Dashboard with test data | Less than 3 seconds | Pending |
+| HTTP 5xx errors | Zero in the critical workflow | Pending |
+| Availability | 100% of the planned period | Pending |
 
-*Note.* Pending: the measurement has not been run yet.
+*Note.* Pending means that the measurement has not yet been performed.
 
 ## Results
 
-Results are presented as they stand on October 10, 2026. No performance metrics are reported because they have not been measured yet.
+The results are presented as of October 10, 2026. No performance metrics are reported because they have not yet been measured.
 
 ### Deliverables
 
-The outcome is a platform with seven backend modules, a web application and a mobile application covering the eight capabilities of the minimum scope: authentication, environments, sensors, monitoring, dashboard, historical analysis, favorites and environment ratings. Complete documentation was also delivered (requirements, analysis, technical proposal, design, database, test plan, quality, implementation, and technical, installation, administrator and user manuals), along with a physical prototype that demonstrates temperature, humidity and sound readings and BLE provisioning.
+The project has progressed from a local development environment to infrastructure deployed on a virtual private server. The platform has a public web address and components running through Docker.
 
-### Test Execution Status
+During checks performed in October 2026, the frontend was verified to respond successfully to an HTTP request. This result provides evidence that the web interface was published, but it does not replace functional testing of login, APIs, microservices, or integration with the IoT prototype.
 
-The execution record of October 9, 2026 is a draft: of the 48 cases, 47 are NOT RUN and one (IOT-008, sending measurements to the API) is BLOCKED because the sending firmware does not exist. As background, the execution reports of October 7 appear in Table 5. In ms-environment-monitoring, 58 of 86 tests failed because of a duplicated bean in the Spring context; only one class with that name exists in the source code, but the build directory keeps an outdated class, so a clean build will probably resolve it. If the error persists, it will be handled as a defect.
+The evaluation should record the date, commit, and tests used to verify the status of each component.
 
-**Table 5**
+### Architecture Implementation
 
-*Previous Execution Reports (October 7, 2026)*
+Organizing the backend into an API Gateway and six microservices makes it possible to distribute the platform's functional responsibilities. Technical documentation and API contracts provide a basis for analyzing interfaces and interactions among components.
 
-| Service | Tests | Passed | With error |
-|---|---|---|---|
-| ms-user-experience | 10 | 10 | 0 |
-| ms-environment-monitoring | 86 | 28 | 58 |
+The architecture should be evaluated by considering both the separation of responsibilities and the additional requirements for configuration, communication, security, and maintenance. The effective independence of services and the consistency of their integration mechanisms require specific verification.
 
-*Note.* These are not the final outcome of the test round.
+### Testing Status
+
+The project has a test plan and a historical inventory of automated tests. However, the number of test methods does not constitute evidence that all tests pass in the deployed version.
+
+Previous reports identified issues in certain integration test executions. These issues must be treated as historical findings until their status is verified through a new test run.
+
+To present updated results, the report should include at least the version evaluated, the test cases executed, the results obtained, the defects identified, and the pending cases. Performance and availability metrics should only be reported when reproducible measurements are available.
+
+### IoT Integration Status
+
+The physical prototype is the component intended to acquire environmental information. Validation of this component must distinguish between readings obtained locally, transmission to the backend, and visualization in the applications.
+
+End-to-end integration will be considered verified only when evidence shows that an identifiable measurement is captured, transmitted, validated, stored, and successfully retrieved. Until such evidence is available, the result must be described according to the stage that has actually been verified.
 
 ### Risk Register
 
-The code audit of October 8, 2026 left 11 active risks: 2 critical, 4 high and 5 medium. The critical ones are the possibility of impersonating an identity through the X-User-Id and X-User-Role headers when a service is reached directly, and a development private key committed to the repository together with a superadmin account seeded with a default password. The high ones include open CORS with credentials, the absence of coverage measurement, a service missing from Kubernetes and continuous integration, and observability that is only declared. Four other risks from the same audit are already closed, for example the token-signature incompatibility between services and an outbox that never published.
+Previous audits identified risks related to access control, secret protection, security configuration, test coverage, and observability.
+
+These findings provide a reference for guiding the technical review, but they must not be presented as a current inventory without checking the present code and configuration.
+
+For each finding, the risk register should indicate its description, severity, affected component, corrective action, verification evidence, and status. A vulnerability should only be declared closed when evidence shows that the identified scenario has been corrected and validated.
 
 ## Discussion
 
 ### Interpretation
 
-Splitting the system into services, OpenAPI contracts and Liquibase migrations make it possible to evolve each module without breaking the others, which agrees with Fowler and Lewis (2014). The closed risks also show a pattern: features that lacked an integration test (the outbox, the event chain, live metrics) failed without anyone noticing, which supports the importance that Martin (2008) and Forsgren et al. (2018) place on testing and continuous delivery.
+EduAirControl integrates a web application, a mobile application, backend services, and a prototype for acquiring environmental information. This combination makes it possible to study the application of a microservices architecture to a specific need in educational environments.
+
+Deploying the platform on remote infrastructure represents progress beyond an implementation limited to the local environment. However, the availability of the interface alone does not demonstrate the overall quality of the system or the correct operation of all services.
+
+The project also demonstrates that the documented architecture and deployed infrastructure must remain synchronized. Differences among configurations, code versions, and dependencies can affect test reproducibility and service behavior. Furthermore, separating the system into microservices facilitates the distribution of responsibilities but increases the complexity of communication, credential management, and observability. Therefore, quality must be evaluated by considering both individual component characteristics and their interactions.
 
 ### Lessons Learned
 
-Documenting and auditing honestly is as valuable as building: separating what has been executed from what is pending makes results verifiable and turns limitations into conscious decisions. It was also learned that documented decisions can drift from what is deployed, as happened with the database strategy: the ADR called for one instance with a schema per service, while Compose and Kubernetes start independent servers.
+One of the main lessons from the project is the importance of distinguishing between design, implementation, and validation. A function described in the requirements or partially present in the code is not necessarily a function that has been tested under real usage conditions.
+
+The project also highlights the need to record evaluated versions, keep documentation up to date, and run tests after infrastructure changes. This procedure makes it possible to associate results with a specific configuration and facilitates the identification of regressions.
+
+Finally, hardware and software integration requires validation of every stage of the data flow. Sensor readings, communication with the mobile device, and transmission to the backend must be analyzed separately before claiming that the entire system is operational.
 
 ### Threats to Validity
 
-The work has three main threats. First, quantitative performance and availability results do not exist yet, so it cannot be claimed that the system meets the acceptance criteria. Second, the prototype was tested with controlled readings and not in a real classroom deployment. Third, part of the test inventory is a static count of the code and does not guarantee that the tests pass.
+This work has three main threats to validity. First, conclusions about performance and availability depend on reproducible measurements. If these measurements have not been conducted, it is not possible to claim that the established criteria have been met. Second, prototype validation is not equivalent to a long-term evaluation in real classrooms. Installation conditions, environmental variability, and sensor characteristics can affect readings. Third, a static test inventory does not guarantee that the tests pass. Test cases must be executed against the evaluated version, and their results must be recorded.
+
+Finally, the existence of security mechanisms does not replace a specific vulnerability assessment or, by itself, demonstrate the absence of risks.
 
 ## Conclusions
 
 ### Summary of Findings
 
-EduAirControl shows that it is feasible to centralize the environmental data of educational spaces in a secure, traceable and scalable platform, using hexagonal microservices and a low-cost IoT prototype. Its quality, however, is not yet demonstrated by measurements: what exists is a verifiable foundation (plan, cases, test inventory and risk register) ready to be executed.
+EduAirControl is a technology platform aimed at managing and analyzing environmental information in educational spaces. Its architecture integrates web and mobile interfaces, backend services, and an IoT prototype, supported by container-based infrastructure.
+
+Remote deployment represents progress in the project's implementation. Evaluating its overall operation also requires up-to-date evidence concerning APIs, persistence, security, and the transmission of measurements from physical devices.
 
 ### Contributions
 
-As a product, a working system with web, mobile and a physical prototype is delivered. As a technical contribution, a reference architecture is documented with 17 justified decisions and 53 contracted paths. As a methodological contribution, a test plan is presented with a results scheme that prevents recording as passed what has not been executed.
+The practical contribution of the project consists of building a platform for managing environmental information in educational spaces and implementing an IoT prototype associated with this purpose.
+
+The technical contribution includes organizing the backend into functional services, using persistence and messaging technologies, and documenting interfaces and architectural decisions.
+
+The methodological contribution consists of establishing a testing process that distinguishes defined test cases from executed and passed tests, while also recording risks and limitations identified during development.
 
 ### Limitations
 
-The final firmware that sends measurements to the API does not exist yet. The MQ-135 is not calibrated. There are no automated frontend tests. Load testing, certified penetration testing and disaster recovery were not carried out. The two critical security risks remain open.
+The evaluation must establish the status of the complete integration among the sensors, ESP32, BLE communication, ingestion service, and consultation interfaces. It must also determine the degree of calibration of the sensors used and the accuracy of the variables obtained.
+
+Conclusions about performance, scalability, availability, and security must be limited to properties that have actually been verified. Evaluation in additional real classrooms, load testing, and comprehensive verification of recovery mechanisms require further evidence whenever these activities have not yet been conducted.
 
 ### Future Work
 
-In the short term: execute and close the test plan, fix the critical security risks, measure coverage with JaCoCo and complete the ingestion firmware with Wi-Fi reconnection. In the medium term: calibrate the MQ-135 or replace it with a certified CO₂ sensor, add automated web and mobile tests, implement the circuit breaker and observability, and deploy to a staging environment to validate rollback. In the long term: evaluate the system in real classrooms over an extended period and study predictive alerts.
+In the short term, the project proposes completing the pending IoT integration checks, executing test cases against an identified version, and reviewing the security controls of services and devices.
+
+In the medium term, the project proposes expanding automated testing for the web and mobile applications, measuring code coverage, and verifying the integration of observability mechanisms and CI/CD processes. It also proposes evaluating the suitability of the sensors used, calibrating or replacing the MQ-135 when measurements of CO₂ with known accuracy are required, and studying resilience mechanisms for distributed services.
+
+In the long term, the project proposes conducting a controlled evaluation in real classrooms over a sufficient period to analyze environmental variations, prototype stability, and the usefulness of the data for educational facility management.
 
 ### Final Reflection
 
-A measurable system starts by saying clearly what has been measured and what has not. That is the conclusion of this project: quality is not declared, it is demonstrated, and in the meantime what is missing must be written down.
+The development of EduAirControl demonstrates the importance of integrating design, implementation, documentation, and validation in a software project. Publishing a platform is a significant milestone, but claims about its quality must be supported by verifiable tests and measurements.
+
+Distinguishing implemented capabilities from those that still require validation makes it possible to describe the project rigorously and establish an evidence-based improvement roadmap.
 
 ## References
 
@@ -293,7 +365,7 @@ Gubbi, J., Buyya, R., Marusic, S., & Palaniswami, M. (2013). Internet of Things 
 
 Hardt, D. (Ed.). (2012). *The OAuth 2.0 authorization framework* (RFC 6749). Internet Engineering Task Force. https://doi.org/10.17487/RFC6749
 
-International Organization for Standardization & International Electrotechnical Commission. (2011). *Systems and software engineering—Systems and software quality requirements and evaluation (SQuaRE)—System and software quality models* (ISO/IEC 25010:2011).
+International Organization for Standardization, & International Electrotechnical Commission. (2011). *Systems and software engineering—Systems and software quality requirements and evaluation (SQuaRE)—System and software quality models* (ISO/IEC 25010:2011).
 
 Jones, M., Bradley, J., & Sakimura, N. (2015). *JSON Web Token (JWT)* (RFC 7519). Internet Engineering Task Force. https://doi.org/10.17487/RFC7519
 
@@ -301,13 +373,13 @@ Martin, R. C. (2008). *Clean code: A handbook of agile software craftsmanship*. 
 
 Mendell, M. J., & Heath, G. A. (2005). Do indoor pollutants and thermal conditions in schools influence student performance? A critical review of the literature. *Indoor Air, 15*(1), 27–52. https://doi.org/10.1111/j.1600-0668.2004.00320.x
 
-Newman, S. (2015). *Building microservices: Designing fine-grained systems*. O'Reilly Media.
+Newman, S. (2015). *Building microservices: Designing fine-grained systems*. O’Reilly Media.
 
 Nygard, M. T. (2018). *Release it! Design and deploy production-ready software* (2nd ed.). Pragmatic Bookshelf.
 
 OpenAPI Initiative. (2021). *OpenAPI specification* (Version 3.1.0). https://spec.openapis.org/oas/v3.1.0
 
-OWASP Foundation. (2021). *OWASP Top 10:2021*. https://owasp.org/Top10/
+OWASP Foundation. (2021). *OWASP Top 10: 2021*. https://owasp.org/Top10/
 
 Richardson, C. (2018). *Microservices patterns: With examples in Java*. Manning Publications.
 
@@ -315,10 +387,10 @@ Shield, B. M., & Dockrell, J. E. (2003). The effects of noise on children at sch
 
 ## Appendix
 
-Data: figures come from the project source code (test inventory), the execution reports of October 7, 2026 and the risk register. No real personal data was used.
+**Data:** The figures come from the project's source code (test inventory), test execution reports dated October 7, 2026, and the risk register. No real personal data were used.
 
-Code: project repository, listed in the file 15_Enlace_Repositorio_GitHub.txt of the delivery; version (commit) to be recorded.
+**Code:** Project repository, referenced in the `15_Enlace_Repositorio_GitHub.txt` file included with the submission; version (commit) to be recorded.
 
-Environment: Windows; earlier reports show JDK 25.0.2, whereas the POMs declare Java 17. Docker and Node versions to be recorded.
+**Environment:** Windows. Previous reports indicate JDK 25.0.2, while the POM files declare Java 17. Docker and Node versions must be recorded.
 
-Annexes: OpenAPI contracts, ADRs, infrastructure files, risk register, screenshots and test inventory (folder 14_Anexos).
+**Appendices:** OpenAPI contracts, ADRs, infrastructure files, risk register, screenshots, and test inventory (folder `14_Anexos`).
