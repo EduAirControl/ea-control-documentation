@@ -202,7 +202,7 @@ Each test case must record its result using a defined status, such as passed, fa
 
 ### Automated Testing
 
-The historical source-code inventory recorded 285 test methods distributed across 42 classes in the version analyzed in October 2026. This figure represents a count of source-code test methods and must not be interpreted as the number of tests that passed.
+The historical source-code inventory recorded 333 test methods distributed across 48 classes in the version analyzed in October 2026. This figure represents a count of source-code test methods and must not be interpreted as the number of tests that passed.
 
 To update this result, the evaluated commit must be identified, applicable tests must be executed, and results must be recorded for each service. Unit tests, tests requiring the Spring application context, and tests dependent on containers or other services must also be distinguished.
 
