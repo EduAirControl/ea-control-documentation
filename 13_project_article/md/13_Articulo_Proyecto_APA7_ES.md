@@ -190,7 +190,7 @@ Cada caso debe registrar su resultado mediante un estado definido, como aprobado
 
 ### Pruebas Automatizadas
 
-El inventario histórico del código registró 285 métodos de prueba distribuidos en 42 clases en la versión analizada en octubre de 2026. Esta cifra representa un conteo del código fuente y no debe interpretarse como el número de pruebas aprobadas.
+El inventario histórico del código registró 333 métodos de prueba distribuidos en 48 clases en la versión analizada en octubre de 2026. Esta cifra representa un conteo del código fuente y no debe interpretarse como el número de pruebas aprobadas.
 
 Para actualizar este resultado se debe identificar el commit examinado, ejecutar las pruebas aplicables y registrar los resultados por servicio. También debe distinguirse entre pruebas unitarias, pruebas que requieren el contexto de Spring y pruebas que dependen de contenedores o otros servicios.
 
