@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 
 class JwtServiceTest {
 
-    private static final String PRIVATE = "keys/dev-private.pem";
-    private static final String PUBLIC = "keys/dev-public.pem";
+    private static final String PRIVATE = "target/test-keys/test-private.pem";
+    private static final String PUBLIC = "target/test-keys/test-public.pem";
 
     private JwtService service(long ttl) {
         return new JwtService(PRIVATE, PUBLIC, ttl);
