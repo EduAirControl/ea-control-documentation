@@ -12,7 +12,7 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
       POSTGRES_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-eduaircontrol_user_management}
       POSTGRES_USER: ${POSTGRES_USER:-user_management_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-user_management_pass}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD?}
     depends_on:
       postgres:
         condition: service_healthy
@@ -24,7 +24,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-eduaircontrol_user_management}
       POSTGRES_USER: ${POSTGRES_USER:-user_management_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-user_management_pass}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD?}
     ports:
       - "5438:5432"
     volumes:
